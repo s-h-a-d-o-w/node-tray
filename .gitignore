@@ -1,0 +1,4 @@
+.env
+.tsimp
+/node_modules
+/build
