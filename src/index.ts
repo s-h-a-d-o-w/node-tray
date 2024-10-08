@@ -1,5 +1,46 @@
-import bindings from "bindings";
+import path from "node:path";
+import { Tray, TrayItem } from "./Tray.js";
 
-const addon = bindings("addon");
+const ids = {
+  autolaunch: Symbol(),
+  exit: Symbol(),
+};
 
-console.log(addon.greet());
+const createTray = () => {
+  const trayItems = [
+    {
+      id: ids.autolaunch,
+      text: "Run on startup",
+      enabled: true,
+      checked: false,
+    },
+    {
+      id: ids.exit,
+      text: "Exit",
+      enabled: true,
+    },
+  ];
+
+  const tray = new Tray({
+    icon: path.join(import.meta.dirname, "../assets/icon.ico"),
+    items: trayItems,
+    tooltip: `Spotify Ad Blocker`,
+  });
+
+  tray.on("click", function clickHandler(this: Tray, item: TrayItem) {
+    if (item.id === ids.autolaunch) {
+      // item.checked ? autoLaunch.disable() : autoLaunch.enable();
+
+      item.checked = !item.checked;
+      this.update(item);
+    } else if (item.id === ids.exit) {
+      console.log("Exiting...");
+
+      // No need to wait or anything because the main thread stays active until all other threads have finished executing anyway.
+      this.destroy();
+      process.exit(0);
+    }
+  });
+};
+
+createTray();
