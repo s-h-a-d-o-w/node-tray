@@ -23,6 +23,10 @@ tray nodeTray;
 std::vector<tray_menu> items;
 std::vector<ItemMap> imap;
 
+// Communication between slow async worker and Exit()
+std::condition_variable cvExit;
+bool hasFinished = false;
+
 void onClick(tray_menu *item) {
   std::lock_guard<std::mutex> lock(mtx);
   eventQueue.push(item);
@@ -74,8 +78,10 @@ public:
     tray_init(&nodeTray);
     while (!cancelTrayLoop && tray_loop(1) == 0) {
     }
-  }
 
+    hasFinished = true;
+    cvExit.notify_all();
+  }
 private:
   bool &cancelTrayLoop;
 };
@@ -120,7 +126,10 @@ Napi::Value Create(const Napi::CallbackInfo &info) {
     items[i].disabled = !item.Get("enabled").As<Napi::Boolean>();
     items[i].checked = item.Get("checked").As<Napi::Boolean>();
 
-    // I'm don't know why we have to use `Persistent` because as long as the event emitter instance exists in memory, it should hold references to all items and those in turn to their ids but... the code simply doesn't work without it.
+    // I'm don't know why we have to use `Persistent` because as long as the
+    // event emitter instance exists in memory, it should hold references to all
+    // items and those in turn to their ids but... the code simply doesn't work
+    // without it.
     imap[i].id = Napi::Persistent(item.Get("id").As<Napi::Symbol>());
     imap[i].item = &items[i];
   }
@@ -179,7 +188,7 @@ Napi::Value Update(const Napi::CallbackInfo &info) {
 
 Napi::Value UpdateIcon(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
-  
+
   nodeTray.icon = strdup(info[0].As<Napi::String>().Utf8Value().c_str());
   tray_update(&nodeTray);
 
@@ -188,7 +197,7 @@ Napi::Value UpdateIcon(const Napi::CallbackInfo &info) {
 
 Napi::Value UpdateTooltip(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
-  
+
   nodeTray.tooltip = strdup(info[0].As<Napi::String>().Utf8Value().c_str());
   tray_update(&nodeTray);
 
@@ -202,6 +211,9 @@ Napi::Value Exit(const Napi::CallbackInfo &info) {
   trayCallback.Release();
 
   tray_exit();
+
+  // std::unique_lock<std::mutex> lock(mtx);
+  // cvExit.wait(lock, [] { return hasFinished; });
 
   return info.Env().Undefined();
 }

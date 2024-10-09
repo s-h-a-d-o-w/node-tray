@@ -1,4 +1,5 @@
 import bindings from "bindings";
+import { fileTypeFromFile } from "file-type";
 
 export type TrayItem = {
   // We didn't abstract away `id` so that users can have duplicate texts and update items from anywhere, not just via click handlers.
@@ -29,12 +30,20 @@ let _trayIcon: TrayIcon | undefined;
 /**
  * Can only be called once - it's not possible to create multiple tray icons.
  */
-export function createTrayIcon(trayIcon: TrayIcon) {
+export async function createTrayIcon(trayIcon: TrayIcon) {
   if (_trayIcon) {
     throw new Error("May only be called once!");
   }
-  _trayIcon = trayIcon;
 
+  // TODO: If we ever support platforms other than Windows, we have to check the different file types for those
+  const mimeType = (await fileTypeFromFile(trayIcon.icon))?.mime;
+  if (mimeType !== "image/x-icon") {
+    throw new Error(
+      `Image mime type has to be "image/x-icon"! (Instead got: ${mimeType})`,
+    );
+  }
+
+  _trayIcon = trayIcon;
   if (trayIcon.items.length > 0) {
     const uniqueIds = new Set(
       trayIcon.items.map(({ id }) => id).filter((id) => id !== undefined),
@@ -64,7 +73,12 @@ export function createTrayIcon(trayIcon: TrayIcon) {
 }
 
 export function destroyTrayIcon() {
+  if (!_trayIcon) {
+    return;
+  }
+
   tray.exit();
+  _trayIcon = undefined;
 }
 
 export function updateTrayIconImage(icon: string) {
