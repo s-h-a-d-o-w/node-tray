@@ -177,11 +177,18 @@ Napi::Value Update(const Napi::CallbackInfo &info) {
   return env.Undefined();
 }
 
-
 Napi::Value UpdateIcon(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
   
   nodeTray.icon = strdup(info[0].As<Napi::String>().Utf8Value().c_str());
+  tray_update(&nodeTray);
+
+  return env.Undefined();
+}
+
+Napi::Value UpdateTooltip(const Napi::CallbackInfo &info) {
+  Napi::Env env = info.Env();
+  
   nodeTray.tooltip = strdup(info[1].As<Napi::String>().Utf8Value().c_str());
   tray_update(&nodeTray);
 
@@ -203,6 +210,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
   exports.Set("create", Napi::Function::New(env, Create));
   exports.Set("update", Napi::Function::New(env, Update));
   exports.Set("updateIcon", Napi::Function::New(env, UpdateIcon));
+  exports.Set("updateTooltip", Napi::Function::New(env, UpdateTooltip));
   exports.Set("exit", Napi::Function::New(env, Exit));
   return exports;
 }
