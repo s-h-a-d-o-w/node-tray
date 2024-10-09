@@ -1,5 +1,5 @@
 {
-  "name": "node-ts-boilerplate",
+  "name": "node-tray",
   "version": "1.0.0",
   "main": "./src/index.ts",
   "type": "module",
@@ -7,7 +7,8 @@
   "scripts": {
     "build": "node-gyp rebuild",
     "lint": "eslint .",
-    "start": "tsx ./example"
+    "start": "tsx ./example",
+    "test": "vitest"
   },
   "devDependencies": {
     "@types/bindings": "^1.5.5",
@@ -20,7 +21,8 @@
     "node-addon-api": "^8.1.0",
     "prettier": "3.3.2",
     "tsx": "^4.19.1",
-    "typescript": "5.6.2"
+    "typescript": "5.6.2",
+    "vitest": "^2.1.2"
   },
   "dependencies": {
     "bindings": "^1.5.0"

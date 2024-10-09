@@ -189,7 +189,7 @@ Napi::Value UpdateIcon(const Napi::CallbackInfo &info) {
 Napi::Value UpdateTooltip(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
   
-  nodeTray.tooltip = strdup(info[1].As<Napi::String>().Utf8Value().c_str());
+  nodeTray.tooltip = strdup(info[0].As<Napi::String>().Utf8Value().c_str());
   tray_update(&nodeTray);
 
   return env.Undefined();

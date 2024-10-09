@@ -5,12 +5,13 @@ import {
   TrayItem,
   updateTrayIconImage,
   updateTrayItem,
+  updateTrayTooltip,
 } from "../src/tray.js";
 
 const trayItems: TrayItem[] = [
   {
     id: Symbol(),
-    text: "Run on startup",
+    text: "Toggle me",
     enabled: true,
     checked: false,
     onClick: (item) => {
@@ -21,6 +22,7 @@ const trayItems: TrayItem[] = [
       updateTrayIconImage(
         path.join(import.meta.dirname, "../assets/icon2.ico"),
       );
+      updateTrayTooltip("Toggle happened");
     },
   },
   {
