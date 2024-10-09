@@ -29,10 +29,12 @@ const createTray = () => {
 
   tray.on("click", function clickHandler(this: Tray, item: TrayItem) {
     if (item.id === ids.autolaunch) {
-      // item.checked ? autoLaunch.disable() : autoLaunch.enable();
-
       item.checked = !item.checked;
-      this.update(item);
+      this.updateItem(item);
+      this.updateIcon(
+        path.join(import.meta.dirname, "../assets/icon2.ico"),
+        "whatever",
+      );
     } else if (item.id === ids.exit) {
       console.log("Exiting...");
 

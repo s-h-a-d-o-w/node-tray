@@ -9,7 +9,7 @@
 #include "tray.h"
 
 struct ItemMap {
-  Napi::ObjectReference id;
+  Napi::Reference<Napi::Symbol> id;
   tray_menu *item;
 };
 
@@ -54,7 +54,7 @@ void processEvents(Napi::Env env, bool &cancelEventProcessing) {
             &index, [](Napi::Env env, Napi::Function jsCallback, int *data) {
               auto &mapEntry = imap[*data];
               auto obj = Napi::Object::New(env);
-              obj.Set("wrappedId", mapEntry.id.Value());
+              obj.Set("id", mapEntry.id.Value());
               obj.Set("text", mapEntry.item->text);
               obj.Set("enabled", !mapEntry.item->disabled);
               obj.Set("checked", mapEntry.item->checked);
@@ -120,12 +120,12 @@ Napi::Value Create(const Napi::CallbackInfo &info) {
     items[i].disabled = !item.Get("enabled").As<Napi::Boolean>();
     items[i].checked = item.Get("checked").As<Napi::Boolean>();
 
-    imap[i].id = Napi::Persistent(item.Get("wrappedId").As<Napi::Object>());
+    // I'm don't know why we have to use `Persistent` because as long as the event emitter instance exists in memory, it should hold references to all items and those in turn to their ids but... the code simply doesn't work without it.
+    imap[i].id = Napi::Persistent(item.Get("id").As<Napi::Symbol>());
     imap[i].item = &items[i];
   }
 
   items[menuItems.Length()].text = nullptr;
-  //   items.back() = {nullptr, nullptr, nullptr, nullptr, false, false};
 
   nodeTray.icon = strdup(icon.c_str());
   nodeTray.tooltip = strdup(tooltip.c_str());
@@ -154,7 +154,7 @@ Napi::Value Update(const Napi::CallbackInfo &info) {
   }
 
   Napi::Object updateObj = info[0].As<Napi::Object>();
-  Napi::Value id = updateObj.Get("wrappedId");
+  Napi::Value id = updateObj.Get("id");
 
   auto it = std::find_if(imap.begin(), imap.end(), [&id](const ItemMap &im) {
     return im.id.Value().StrictEquals(id);
@@ -177,6 +177,17 @@ Napi::Value Update(const Napi::CallbackInfo &info) {
   return env.Undefined();
 }
 
+
+Napi::Value UpdateIcon(const Napi::CallbackInfo &info) {
+  Napi::Env env = info.Env();
+  
+  nodeTray.icon = strdup(info[0].As<Napi::String>().Utf8Value().c_str());
+  nodeTray.tooltip = strdup(info[1].As<Napi::String>().Utf8Value().c_str());
+  tray_update(&nodeTray);
+
+  return env.Undefined();
+}
+
 Napi::Value Exit(const Napi::CallbackInfo &info) {
   cancelEventProcessing = true;
   cancelTrayLoop = true;
@@ -191,6 +202,7 @@ Napi::Value Exit(const Napi::CallbackInfo &info) {
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
   exports.Set("create", Napi::Function::New(env, Create));
   exports.Set("update", Napi::Function::New(env, Update));
+  exports.Set("updateIcon", Napi::Function::New(env, UpdateIcon));
   exports.Set("exit", Napi::Function::New(env, Exit));
   return exports;
 }

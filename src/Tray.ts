@@ -14,6 +14,9 @@ export type TrayItem = {
 };
 
 export class Tray extends EventEmitter {
+  icon: string;
+  items: TrayItem[];
+  tooltip: string;
   wrappedIds: {
     [key: symbol]: {
       id: symbol;
@@ -32,15 +35,15 @@ export class Tray extends EventEmitter {
   }
 
   click(item: TrayItem) {
-    this.emit("click", this.unwrapId(item));
+    this.emit("click", item);
   }
 
   constructor(opts: { icon: string; items: TrayItem[]; tooltip?: string }) {
     super();
 
-    const icon = opts.icon,
-      tooltip = opts.tooltip || "";
-    let items = opts.items;
+    this.icon = opts.icon || "";
+    this.tooltip = opts.tooltip || "";
+    this.items = opts.items;
 
     // The IDs the user passes in are mostly just for their convenience, the native addon
     // uses references to objects that are not allowed to change.
@@ -51,26 +54,27 @@ export class Tray extends EventEmitter {
     // this.wrappedIds[FOO] = { id: FOO }
     this.wrappedIds = {};
 
-    if (icon && items && items.length > 0) {
+    if (this.icon && this.items && this.items.length > 0) {
       const uniqueIds = new Set(
-        items.map(({ id }) => id).filter((id) => id !== undefined),
+        this.items.map(({ id }) => id).filter((id) => id !== undefined),
       );
-      if (uniqueIds.size !== items.length) {
+      if (uniqueIds.size !== this.items.length) {
         throw new Error("IDs must be defined and unique!");
       }
 
       // Prep items with default values and wrapping their IDs
-      items = items.map((item) => {
+      this.items = this.items.map((item) => {
         item = this.addDefaults(item);
 
-        this.wrappedIds[item.id] = {
-          id: item.id,
-        };
+        // this.wrappedIds[item.id] = {
+        //   id: item.id,
+        // };
 
-        return this.wrapId(item);
+        return item;
+        // return this.wrapId(item);
       });
 
-      tray.create(icon, tooltip || "", items, this.click.bind(this));
+      tray.create(this.icon, this.tooltip, this.items, this.click.bind(this));
     } else {
       throw "tray: An icon and at least one item have to be provided.";
     }
@@ -91,8 +95,23 @@ export class Tray extends EventEmitter {
     return item;
   }
 
-  update(item: TrayItem) {
-    tray.update(this.wrapId(item));
+  updateItem(item: TrayItem) {
+    try {
+      tray.update(item);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  updateIcon(icon?: string, tooltip?: string) {
+    if (typeof icon === "string") {
+      this.icon = icon;
+    }
+    if (typeof tooltip === "string") {
+      this.tooltip = tooltip;
+    }
+
+    tray.updateIcon(this.icon, this.tooltip);
   }
 
   wrapId(item: TrayItem) {

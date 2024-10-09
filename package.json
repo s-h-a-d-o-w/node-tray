@@ -7,7 +7,7 @@
   "scripts": {
     "build": "node-gyp rebuild",
     "lint": "eslint .",
-    "start": "tsx ."
+    "start": "tsx --force-node-api-uncaught-exceptions-policy=true ."
   },
   "devDependencies": {
     "@types/bindings": "^1.5.5",
