@@ -20,7 +20,7 @@ const trayItems: TrayItem[] = [
         checked: !item.checked,
       });
       updateTrayIconImage(
-        path.join(import.meta.dirname, "../assets/icon2.ico"),
+        path.join(import.meta.dirname, "../assets/icon_white.ico"),
       );
       updateTrayTooltip("Toggle happened");
     },

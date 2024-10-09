@@ -38,7 +38,9 @@ test("everything can be called without crashing", async () => {
     id: ids.bar,
     text: "baz",
   });
-  updateTrayIconImage(path.join(import.meta.dirname, "../assets/icon2.ico"));
+  updateTrayIconImage(
+    path.join(import.meta.dirname, "../assets/icon_white.ico"),
+  );
   updateTrayTooltip("finish");
 
   destroyTrayIcon();
@@ -65,7 +67,7 @@ test("only allowed to be called once", async () => {
 test("throws when attempting to use an incompatible image", async () => {
   await expect(
     createTrayIcon({
-      icon: path.join(import.meta.dirname, "../assets/icon2.png"),
+      icon: path.join(import.meta.dirname, "../assets/icon_white.png"),
       items: trayItems,
       tooltip: `start`,
     }),
