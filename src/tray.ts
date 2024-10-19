@@ -24,7 +24,7 @@ type TrayIcon = {
   tooltip?: string;
 };
 
-const tray = bindings("addon");
+const tray = bindings("tray");
 let _trayIcon: TrayIcon | undefined;
 
 /**

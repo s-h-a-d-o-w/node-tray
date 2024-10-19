@@ -1,9 +1,9 @@
 {
   "targets": [{
-    "target_name": "addon",
+    "target_name": "tray",
     "cflags!": [ "-fno-exceptions" ],
     "cflags_cc!": [ "-fno-exceptions" ],
-    "sources": [ "./src/addon.cpp" ],
+    "sources": [ "./src/tray.cpp" ],
     "include_dirs": [
       "<!@(node -p \"require('node-addon-api').include\")"
     ],
