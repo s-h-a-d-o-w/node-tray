@@ -6,7 +6,7 @@ import {
   updateTrayIconImage,
   updateTrayItem,
   updateTrayTooltip,
-} from "../src/tray.js";
+} from "../dist/tray.cjs";
 
 const trayItems: TrayItem[] = [
   {

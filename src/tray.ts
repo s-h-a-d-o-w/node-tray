@@ -1,5 +1,5 @@
-import bindings from "bindings";
 import { fileTypeFromFile } from "file-type";
+import { createRequire } from "module";
 
 export type TrayItem = {
   // We didn't abstract away `id` so that users can have duplicate texts and update items from anywhere, not just via click handlers.
@@ -24,7 +24,7 @@ type TrayIcon = {
   tooltip?: string;
 };
 
-const tray = bindings("tray");
+const tray = createRequire(__filename)("bindings")("tray");
 let _trayIcon: TrayIcon | undefined;
 
 /**
