@@ -1,3 +1,6 @@
+[![npm version](https://img.shields.io/npm/v/node-tray.svg)](https://www.npmjs.com/package/node-tray)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # node-tray
 
 Another library for rendering a tray icon on Windows. (And it's feasible to support other platforms in the future. Unfortunately, I can only work with Windows at the moment. But PRs are welcome - see also "dev notes" below.)

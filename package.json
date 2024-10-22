@@ -1,9 +1,12 @@
 {
   "name": "node-tray",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "./dist/tray.cjs",
   "type": "module",
   "gypfile": true,
+  "description": "Another library for rendering a tray icon on Windows.",
+  "homepage": "https://github.com/s-h-a-d-o-w/node-tray.git",
+  "author": "Andreas Opferkuch <andreas.opferkuch@gmail.com>",
   "license": "MIT",
   "scripts": {
     "build": "rimraf dist && pnpm build:declaration && pnpm build:bundle",
