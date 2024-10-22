@@ -11,6 +11,7 @@
     "build:declaration": "tsc -p tsconfig.prod.json && rename dist\\tray.d.ts tray.d.cts",
     "dev": "node-gyp rebuild",
     "lint": "eslint .",
+    "prepack": "pnpm build",
     "start": "tsx ./example",
     "test": "vitest",
     "typecheck": "tsc"
@@ -19,8 +20,7 @@
     "dist",
     "binding.gyp",
     "src/tray.cpp",
-    "src/tray.h",
-    "build/Release/tray.node"
+    "src/tray.h"
   ],
   "dependencies": {
     "bindings": "^1.5.0",
