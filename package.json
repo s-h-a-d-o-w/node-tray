@@ -9,7 +9,7 @@
     "build": "node-gyp rebuild && rimraf dist && pnpm build:declaration && pnpm build:bundle",
     "build:bundle": "esbuild ./src/tray.ts --bundle --platform=node --target=node20 --outfile=dist/tray.cjs",
     "build:declaration": "tsc -p tsconfig.prod.json && rename dist\\tray.d.ts tray.d.cts",
-    "install": "node-gyp rebuild",
+    "dev": "node-gyp rebuild",
     "lint": "eslint .",
     "start": "tsx ./example",
     "test": "vitest",
