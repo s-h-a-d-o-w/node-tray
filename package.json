@@ -1,6 +1,6 @@
 {
   "name": "node-tray",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "./dist/tray.cjs",
   "type": "module",
   "gypfile": true,

@@ -1,5 +1,6 @@
 import { fileTypeFromFile } from "file-type";
 import { createRequire } from "module";
+import { join } from "node:path";
 
 export type TrayItem = {
   // We didn't abstract away `id` so that users can have duplicate texts and update items from anywhere, not just via click handlers.
@@ -24,7 +25,13 @@ type TrayIcon = {
   tooltip?: string;
 };
 
-const tray = createRequire(__filename)("bindings")("tray");
+// @ts-expect-error
+const tray = process.pkg
+  ? createRequire(__filename)(join(process.cwd(), "node_modules/bindings"))({
+      bindings: "tray",
+      module_root: process.cwd(),
+    })
+  : createRequire(__filename)("bindings")("tray");
 let _trayIcon: TrayIcon | undefined;
 
 /**
