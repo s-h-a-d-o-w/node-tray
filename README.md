@@ -3,7 +3,7 @@
 
 # node-tray
 
-Another library for rendering a tray icon on Windows. (And it's feasible to support other platforms in the future. Unfortunately, I can only work with Windows at the moment. But PRs are welcome - see also "dev notes" below.)
+Another library for rendering a tray icon on Windows.
 
 ## Usage
 
@@ -23,4 +23,4 @@ If you want to use something like `node:sea` to publish your app, you have to sh
 
 ## Dev notes
 
-- Ideally use [this cross platform tray implementation](https://github.com/dmikushin/tray) instead of the current one (which originally also supports multiple platforms but is out of date anyway). I've not been able to compile it on my Windows machine.
+- ~~Ideally use [this cross platform tray implementation](https://github.com/dmikushin/tray) instead of the current one (which originally also supports multiple platforms but is out of date anyway). I've not been able to compile it on my Windows machine.~~ It's not feasible to use this because it can't be compiled using just `node-gyp`. So the only thing that could be done would be to re-enable support for Linux using the original tray library.
