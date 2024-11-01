@@ -1,6 +1,6 @@
 {
   "name": "node-tray",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "./dist/tray.cjs",
   "type": "module",
   "gypfile": true,
@@ -48,5 +48,10 @@
     "typescript": "5.6.2",
     "vitest": "^2.1.2"
   },
-  "keywords": ["tray", "tray icon", "napi", "native addon"]
+  "keywords": [
+    "tray",
+    "tray icon",
+    "napi",
+    "native addon"
+  ]
 }
