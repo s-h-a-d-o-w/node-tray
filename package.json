@@ -40,6 +40,8 @@
     "@types/node": "^24.13.2",
     "esbuild": "^0.24.0",
     "file-type": "^19.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.8",
     "move-file-cli": "^3.0.0",
     "oxfmt": "^0.55.0",
     "oxlint": "^1.70.0",
