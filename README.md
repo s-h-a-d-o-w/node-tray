@@ -34,6 +34,7 @@ Build success was tested but I can't evaluate whether it actually works. **Pleas
 Installing dependencies will probably fail, because compilation is part of that.
 
 On Debian based systems:
+
 1. `sudo apt-get install libgtk-3-dev xorg-dev libappindicator3-dev`
 2. Run `install` again or `pnpm dev`.
 3. If it still fails, you might have to update `PKG_CONFIG_PATH` in `node-gyp` depending on whether your distro installs the libraries somewhere else. (And possibly the precise version of `appindicator`.)

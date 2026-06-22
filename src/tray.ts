@@ -1,6 +1,7 @@
+// oxlint-disable typescript/no-unsafe-call typescript/no-unsafe-member-access typescript/no-unsafe-assignment
 import { fileTypeFromFile } from "file-type";
-import { createRequire } from "module";
-import { join } from "node:path";
+import { createRequire } from "node:module";
+import path from "node:path";
 
 export type TrayItem = {
   // We didn't abstract away `id` so that users can have duplicate texts and update items from anywhere, not just via click handlers.
@@ -25,20 +26,30 @@ type TrayIcon = {
   tooltip?: string;
 };
 
-// @ts-expect-error
-const tray = process.pkg
-  ? createRequire(__filename)(join(process.cwd(), "node_modules/bindings"))({
-      bindings: "tray",
-      module_root: process.cwd(),
-    })
-  : createRequire(__filename)("bindings")("tray");
-let _trayIcon: TrayIcon | undefined;
+const tray =
+  "pkg" in process && process.pkg
+    ? createRequire(__filename)(
+        path.join(process.cwd(), "node_modules/bindings"),
+      )({
+        bindings: "tray",
+        module_root: process.cwd(),
+      })
+    : createRequire(__filename)(
+        path.join(process.cwd(), "node_modules/bindings"),
+      )("tray");
+let trayIconSingleton: TrayIcon | undefined;
+
+function wasCreatedGuard() {
+  if (!trayIconSingleton) {
+    throw new Error("Tray icon hasn't been created yet!");
+  }
+}
 
 /**
  * Can only be called once - it's not possible to create multiple tray icons.
  */
 export async function createTrayIcon(trayIcon: TrayIcon) {
-  if (_trayIcon) {
+  if (trayIconSingleton) {
     throw new Error("May only be called once!");
   }
 
@@ -50,13 +61,11 @@ export async function createTrayIcon(trayIcon: TrayIcon) {
     );
   }
 
-  _trayIcon = trayIcon;
+  trayIconSingleton = trayIcon;
   if (trayIcon.items.length > 0) {
-    const uniqueIds = new Set(
-      trayIcon.items.map(({ id }) => id).filter((id) => id !== undefined),
-    );
+    const uniqueIds = new Set(trayIcon.items.map(({ id }) => id));
     if (uniqueIds.size !== trayIcon.items.length) {
-      throw new Error("IDs must be defined and unique!");
+      throw new Error("IDs must be unique!");
     }
 
     // Mutate with default values. (I figure if the user doesn't provide anything, they wouldn't mind us mutating their object. And they can always still update it later on however they want to.)
@@ -80,12 +89,12 @@ export async function createTrayIcon(trayIcon: TrayIcon) {
 }
 
 export function destroyTrayIcon() {
-  if (!_trayIcon) {
+  if (!trayIconSingleton) {
     return;
   }
 
   tray.exit();
-  _trayIcon = undefined;
+  trayIconSingleton = undefined;
 }
 
 export function updateTrayIconImage(icon: string) {
@@ -101,18 +110,12 @@ export function updateTrayItem(item: TrayItem) {
 
   try {
     tray.update(item);
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error(error);
   }
 }
 
 export function updateTrayTooltip(tooltip: string) {
   wasCreatedGuard();
   tray.updateTooltip(tooltip);
-}
-
-function wasCreatedGuard() {
-  if (!_trayIcon) {
-    throw new Error("Tray icon hasn't been created yet!");
-  }
 }

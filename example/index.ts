@@ -2,15 +2,15 @@ import path from "node:path";
 import {
   createTrayIcon,
   destroyTrayIcon,
-  TrayItem,
   updateTrayIconImage,
   updateTrayItem,
   updateTrayTooltip,
+  type TrayItem,
 } from "../dist/tray.cjs";
 
 const trayItems: TrayItem[] = [
   {
-    id: Symbol(),
+    id: Symbol("toggle"),
     text: "Toggle me",
     enabled: true,
     checked: false,
@@ -20,26 +20,27 @@ const trayItems: TrayItem[] = [
         checked: !item.checked,
       });
       updateTrayIconImage(
-        path.join(import.meta.dirname, item.checked ? "../assets/icon.ico" : "../assets/icon_white.ico"),
+        path.join(
+          import.meta.dirname,
+          item.checked ? "../assets/icon.ico" : "../assets/icon_white.ico",
+        ),
       );
       updateTrayTooltip("Toggle happened");
     },
   },
   {
-    id: Symbol(),
+    id: Symbol("exit"),
     text: "Exit",
     enabled: true,
     onClick: () => {
       console.log("Exiting...");
-
-      // No need to wait or anything because the main thread stays active until all other threads have finished executing anyway.
       destroyTrayIcon();
       process.exit(0);
     },
   },
 ];
 
-createTrayIcon({
+void createTrayIcon({
   icon: path.join(import.meta.dirname, "../assets/icon.ico"),
   items: trayItems,
   tooltip: `Spotify Ad Blocker`,
