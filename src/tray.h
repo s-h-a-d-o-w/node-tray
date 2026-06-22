@@ -118,7 +118,10 @@ static void tray_update_icon(char *icon) {
   app_indicator_set_icon(indicator, icon);
 }
 
-static void tray_exit() { loop_result = -1; }
+static void tray_exit() {
+  loop_result = -1;
+  g_main_context_wakeup(NULL); // unblock gtk_main_iteration_do on the loop thread
+}
 
 #elif defined(TRAY_APPKIT)
 
