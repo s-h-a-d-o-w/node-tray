@@ -77,9 +77,11 @@ static GtkMenuShell *_create_tray_menu(struct tray_menu *m) {
         item = gtk_menu_item_new_with_label(m->text);
         gtk_menu_item_set_submenu(GTK_MENU_ITEM(item),
                                   GTK_WIDGET(_create_tray_menu(m->submenu)));
-      } else {
+      } else if (m->checked) {
         item = gtk_check_menu_item_new_with_label(m->text);
-        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), !!m->checked);
+        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), true);
+      } else {
+        item = gtk_menu_item_new_with_label(m->text);
       }
       gtk_widget_set_sensitive(item, !m->disabled);
       if (m->cb != NULL) {
