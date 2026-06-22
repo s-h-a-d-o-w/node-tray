@@ -21,7 +21,7 @@
   "main": "./dist/tray.js",
   "scripts": {
     "build": "rimraf dist && pnpm build:declaration && pnpm build:bundle",
-    "build:bundle": "esbuild ./src/tray.ts --bundle --platform=node --target=node24 --outfile=dist/tray.js",
+    "build:bundle": "esbuild ./src/tray.ts --bundle --platform=node --target=node24 --format=esm --outfile=dist/tray.js",
     "build:declaration": "tsc -p tsconfig.prod.json",
     "dev": "node-gyp rebuild",
     "lint": "oxlint --report-unused-disable-directives-severity=error",
