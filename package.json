@@ -25,6 +25,7 @@
     "build:declaration": "tsc -p tsconfig.prod.json && move-file dist/tray.d.ts dist/tray.d.cts",
     "dev": "node-gyp rebuild",
     "lint": "oxlint --report-unused-disable-directives-severity=error",
+    "prepare": "husky",
     "prepack": "pnpm build",
     "start": "node ./example/index.ts",
     "test": "vitest",
