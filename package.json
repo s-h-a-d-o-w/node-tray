@@ -18,11 +18,11 @@
     "src/tray.h"
   ],
   "type": "module",
-  "main": "./dist/tray.cjs",
+  "main": "./dist/tray.js",
   "scripts": {
     "build": "rimraf dist && pnpm build:declaration && pnpm build:bundle",
-    "build:bundle": "esbuild ./src/tray.ts --bundle --platform=node --target=node20 --outfile=dist/tray.cjs",
-    "build:declaration": "tsc -p tsconfig.prod.json && move-file dist/tray.d.ts dist/tray.d.cts",
+    "build:bundle": "esbuild ./src/tray.ts --bundle --platform=node --target=node24 --outfile=dist/tray.js",
+    "build:declaration": "tsc -p tsconfig.prod.json",
     "dev": "node-gyp rebuild",
     "lint": "oxlint --report-unused-disable-directives-severity=error",
     "prepare": "husky",

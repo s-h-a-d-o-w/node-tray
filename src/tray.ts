@@ -1,7 +1,6 @@
 // oxlint-disable typescript/no-unsafe-call typescript/no-unsafe-member-access typescript/no-unsafe-assignment
 import { fileTypeFromFile } from "file-type";
-import { createRequire } from "node:module";
-import path from "node:path";
+import bindings from "bindings";
 
 export type TrayItem = {
   // We didn't abstract away `id` so that users can have duplicate texts and update items from anywhere, not just via click handlers.
@@ -28,15 +27,11 @@ type TrayIcon = {
 
 const tray =
   "pkg" in process && process.pkg
-    ? createRequire(__filename)(
-        path.join(process.cwd(), "node_modules/bindings"),
-      )({
+    ? bindings({
         bindings: "tray",
         module_root: process.cwd(),
       })
-    : createRequire(__filename)(
-        path.join(process.cwd(), "node_modules/bindings"),
-      )("tray");
+    : bindings("tray");
 let trayIconSingleton: TrayIcon | undefined;
 
 function wasCreatedGuard() {

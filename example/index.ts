@@ -6,7 +6,7 @@ import {
   updateTrayItem,
   updateTrayTooltip,
   type TrayItem,
-} from "../dist/tray.cjs";
+} from "../src/tray.ts";
 
 const trayItems: TrayItem[] = [
   {
