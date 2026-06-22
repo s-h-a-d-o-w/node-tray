@@ -190,7 +190,7 @@ Napi::Value UpdateIcon(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
 
   nodeTray.icon = strdup(info[0].As<Napi::String>().Utf8Value().c_str());
-  tray_update(&nodeTray);
+  tray_update_icon(nodeTray.icon);
 
   return env.Undefined();
 }
