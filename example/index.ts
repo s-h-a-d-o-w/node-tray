@@ -8,6 +8,8 @@ import {
   type TrayItem,
 } from "../src/tray.ts";
 
+const ICON_EXTENSION = process.platform === "win32" ? ".ico" : ".png";
+
 const trayItems: TrayItem[] = [
   {
     id: Symbol("toggle"),
@@ -22,7 +24,9 @@ const trayItems: TrayItem[] = [
       updateTrayIconImage(
         path.join(
           import.meta.dirname,
-          item.checked ? "../assets/icon.ico" : "../assets/icon_white.ico",
+          item.checked
+            ? `../assets/icon${ICON_EXTENSION}`
+            : `../assets/icon_white${ICON_EXTENSION}`,
         ),
       );
       updateTrayTooltip("Toggle happened");
@@ -41,7 +45,7 @@ const trayItems: TrayItem[] = [
 ];
 
 void createTrayIcon({
-  icon: path.join(import.meta.dirname, "../assets/icon.ico"),
+  icon: path.join(import.meta.dirname, `../assets/icon${ICON_EXTENSION}`),
   items: trayItems,
   tooltip: `Spotify Ad Blocker`,
 });

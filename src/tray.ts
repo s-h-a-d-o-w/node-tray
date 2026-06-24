@@ -50,9 +50,9 @@ export async function createTrayIcon(trayIcon: TrayIcon) {
 
   // TODO: If we ever support platforms other than Windows, we have to check the different file types for those
   const mimeType = (await fileTypeFromFile(trayIcon.icon))?.mime;
-  if (mimeType !== "image/x-icon") {
+  if (!(mimeType === "image/x-icon" || mimeType === "image/png")) {
     throw new Error(
-      `Image mime type has to be "image/x-icon"! (Instead got: ${mimeType})`,
+      `Image mime type has to be "image/x-icon" or "image/png"! (Instead got: ${mimeType})`,
     );
   }
 
