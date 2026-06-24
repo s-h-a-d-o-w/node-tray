@@ -70,12 +70,12 @@ describe(createTrayIcon, () => {
   it("throws when attempting to use an incompatible image", async () => {
     await expect(
       createTrayIcon({
-        icon: path.join(import.meta.dirname, "../assets/icon_white.png"),
+        icon: path.join(import.meta.dirname, "../assets/icon_white.jpg"),
         items: trayItems,
         tooltip: `start`,
       }),
     ).rejects.toMatchInlineSnapshot(
-      `[Error: Image mime type has to be "image/x-icon"! (Instead got: image/png)]`,
+      `[Error: Image mime type has to be "image/x-icon" or "image/png"! (Instead got: image/jpeg)]`,
     );
 
     // Doesn't do anything because nothing was created but... also shouldn't cause an error.
