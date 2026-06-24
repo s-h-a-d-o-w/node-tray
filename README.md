@@ -17,6 +17,8 @@ Another library for rendering a tray icon.
 
 See directory `example`.
 
+Icon image should be 48x48 for best compatibility. Windows can do 32x32, Linux can't. Lower resolutions are often recommended but I figure if OSes can handle higher ones, why not take advantage?
+
 When using a display scale other than 100% on Windows, the tray icon will look a bit soft. This can be resolved by enabling "compatibility setting -> high DPI -> scaling behavior performed by: application" for whatever executable you end up running this with/in. (Or inject a DPI manifest somehow - please let me know if you manage to do that successfully! 😄)
 
 ## Usage in a prebuilt app
