@@ -411,9 +411,9 @@ static void tray_update(struct tray *tray) {
 }
 
 static void tray_update_icon(char *icon) {
-  HICON icon;
+  HICON hIcon;
   wchar_t* iconPath = toWide(icon);
-  int iconsExtracted = ExtractIconEx(iconPath, 0, NULL, &icon, 1);
+  int iconsExtracted = ExtractIconEx(iconPath, 0, NULL, &hIcon, 1);
   if(iconsExtracted < 1) {
     printf("No icons found at: %s\n", icon);
   }
@@ -421,7 +421,7 @@ static void tray_update_icon(char *icon) {
   if (nid.hIcon) {
     DestroyIcon(nid.hIcon);
   }
-  nid.hIcon = icon;
+  nid.hIcon = hIcon;
 
   Shell_NotifyIcon(NIM_MODIFY, &nid);
 }
